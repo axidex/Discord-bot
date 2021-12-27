@@ -1,0 +1,6 @@
+/__pycache__
+information.txt
+config.py
+*.bat
+token.txt
+*.lnk
