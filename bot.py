@@ -3,6 +3,8 @@ from discord.ext import commands
 from discord.utils import get
 from config import settings
 
+import re
+
 import random
 import asyncio
 
@@ -11,59 +13,214 @@ import aiohttp # google
 import json # random images from internet
 import requests 
 
-
 bot = commands.Bot(command_prefix = settings['prefix']) 
 
 song_queue = []
+admins = []
+skip_bans = []
+bans = []
+
+@bot.command() 
+async def ban_skip(ctx, user):
+    if ctx.channel.name == settings['bot_channel_name']:
+        global admins
+
+        for admin in admins:
+            if admin == f"{ctx.message.author.id}":
+                break
+        else:
+            return await ctx.send(f'<:gachiFU:998171613247848448> Fuck you!!!!!!, {ctx.message.author.mention}! You not my master FUCKING SLAVE! <:gachiFU:998171613247848448>') 
+
+        userId = re.findall(r'[0-9]+', f"{user}")
+
+        skip_bans.append(userId[0])
+        with open('skip_bans.dat', 'a') as f:
+            f.write(f"{userId[0]}\n")
+
+        await ctx.send(f'Ohh my master {ctx.message.author.mention}, this dirty {user} was added to my slaves note.') 
 
 
 @bot.command() 
-async def hello(ctx): 
-    author = ctx.message.author 
-    await ctx.send(f'Hello, {author.mention}!') 
+async def ban(ctx, user):
+    if ctx.channel.name == settings['bot_channel_name']:
+        global admins
+
+        for admin in admins:
+            if admin == f"{ctx.message.author.id}":
+                break
+        else:
+            return await ctx.send(f'<:gachiFU:998171613247848448> Fuck you!!!!!!, {ctx.message.author.mention}! You not my master FUCKING SLAVE! <:gachiFU:998171613247848448>') 
+
+        userId = re.findall(r'[0-9]+', f"{user}")
+
+        bans.append(f"{userId[0]}")
+        with open('bans.dat', 'a') as f:
+            f.write(f"{userId[0]}\n")
+
+        await ctx.send(f'Ohh my master {ctx.message.author.mention}, this dirty {user} was added to my slaves note.') 
+
+
+@bot.command() 
+async def unban(ctx, ban_mode, user):
+    """Unban user. Example: slave, unban skip_ban @axidex"""
+    if ctx.channel.name == settings['bot_channel_name']:
+        global admins
+        global skip_bans
+        global bans
+
+        for admin in admins:
+            if admin == f"{ctx.message.author.id}":
+                break
+        else:
+            return await ctx.send(f'<:gachiFU:998171613247848448> Fuck you!!!!!!, {ctx.message.author.mention}! You not my master FUCKING SLAVE! <:gachiFU:998171613247848448>') 
+
+        userId = re.findall(r'[0-9]+', f"{user}")
+
+        if ban_mode == "ban":
+            ban_list = bans
+        elif ban_mode == "skip_ban":
+            ban_list = skip_bans
+        else:
+            return await ctx.send(f'I dont undestand. It\'s to HAAARD!!!') 
+
+        with open(rf"{ban_mode}s.dat", 'r+') as f:
+            lines = f.readlines()
+
+            for i in range(len(lines)):
+                if lines[i] == f"{userId[0]}\n":
+                    del lines[i]
+                    break
+            else:
+                return await ctx.send(f'I can\'t find this {user} in my slaves note.') 
+            
+            f.seek(0)
+            f.truncate()   
+            f.writelines(lines)
+
+        for i in range(len(ban_list)):
+            if ban_list[i] == f"{userId[0]}":
+                del ban_list[i]
+                
+        await ctx.send(f'Ohh my lord {ctx.message.author.mention}, this {user} is now free.') 
+            
+
+@bot.command() 
+async def hello(ctx):
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
+
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+
+            author = ctx.message.author 
+            await ctx.send(f'Hello, {author.mention}!') 
+            
+            # add admin to admins.dat
+            #with open('admin_id.txt', 'a') as f:
+            #    f.write(f"{ctx.author.id}")
 
 @bot.command()
 async def fucku(ctx): 
-    author = ctx.message.author
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
 
-    await ctx.send(f'Fuck u, {author.mention}!') 
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+
+            author = ctx.message.author
+
+            await ctx.send(f'Fuck u, {author.mention}!') 
 
 @bot.command()
 async def joke(ctx):
-    response = requests.get('https://some-random-api.ml/img/fox') # Get-запрос
-    json_data = json.loads(response.text) # Извлекаем JSON
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
 
-    embed = discord.Embed(color = 0xff9900, title = 'Random joke') # Создание Embed'a
-    embed.set_image(url = json_data['link']) # Устанавливаем картинку Embed'a
-    await ctx.send(embed = embed) # Отправляем Embed
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            response = requests.get('https://some-random-api.ml/img/fox') # Get-запрос
+            json_data = json.loads(response.text) # Извлекаем JSON
+
+            embed = discord.Embed(color = 0xff9900, title = 'Random joke') # Создание Embed'a
+            embed.set_image(url = json_data['link']) # Устанавливаем картинку Embed'a
+            await ctx.send(embed = embed) # Отправляем Embed
 
 @bot.command()
 async def add(ctx, left: int, right: int):
     """Adds two numbers together."""
-    await ctx.send(left + right)
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
+
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            
+            await ctx.send(left + right)
 
 @bot.command()
 async def roll(ctx, left: int):
-    await ctx.send(random.randint(0, left)) 
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
+
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            await ctx.send(random.randint(0, left)) 
 
 @bot.command()
 async def roll100(ctx):
-    await ctx.send(random.randint(0, 100))
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
+
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            await ctx.send(random.randint(0, 100))
 
 @bot.command()
 async def roll2(ctx, left: int, right: int):
-    await ctx.send(random.randint(left, right)) 
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
+
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            await ctx.send(random.randint(left, right)) 
     
 @bot.command(description='For when you wanna settle the score some other way')
 async def choose(ctx, *choices: str):
     """Chooses between multiple choices."""
-    await ctx.send(random.choice(choices))
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
+
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            await ctx.send(random.choice(choices))
 
 @bot.command()
 async def repeat(ctx, times: int, content='repeating...'):
     """Repeats a message multiple times."""
-    for i in range(times):
-        await ctx.send(content)
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
+
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            for i in range(times):
+                await ctx.send(content)
 
 
 
@@ -79,6 +236,7 @@ FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconne
 
 def play_next(ctx):
     del song_queue[0]
+    voice_client = get(bot.voice_clients, guild=ctx.guild)
 
     if len(song_queue) > 0: 
         with YoutubeDL(YDL_OPTIONS) as ydl:
@@ -86,7 +244,6 @@ def play_next(ctx):
 
         URL = info['formats'][0]['url']
 
-        voice_client = get(bot.voice_clients, guild=ctx.guild)
         voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source=URL, **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
     else:
         if not voice_client.is_playing():
@@ -95,94 +252,197 @@ def play_next(ctx):
 
 @bot.command()
 async def play(ctx, arg = None):
+    """Play song"""
 
-    global song_queue
-    
-    if arg is None and not song_queue:
-        return await ctx.send(f"Hey {ctx.message.author.mention}, you must include something to play or i will cum inside your ass!")
-    else:
-        song_queue.append(arg)
-        await ctx.send(f"``{arg}`` Thank you sir {ctx.message.author.mention}! I added your song to queue. <:gachiVan:998171539746861108>")
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
 
-    voice_client = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            global song_queue
+            
+            if arg is None and not song_queue:
+                return await ctx.send(f"Hey {ctx.message.author.mention}, you must include something to play or i will cum inside your ass!")
+            else:
+                song_queue.append(arg)
+                await ctx.send(f"``{arg}`` Thank you sir {ctx.message.author.mention}! I added your song to queue. <:gachiVan:998171539746861108>")
 
-    if voice_client is None:
-        try:
-            voice_channel = ctx.message.author.voice.channel
-            voice_client = await voice_channel.connect()
-        except:
-            print('Уже подключен или не удалось подключиться')
+            voice_client = get(bot.voice_clients, guild=ctx.guild)
+
+            if voice_client is None:
+                try:
+                    voice_channel = ctx.message.author.voice.channel
+                    voice_client = await voice_channel.connect()
+                except:
+                    print('Уже подключен или не удалось подключиться')
 
 
-        with YoutubeDL(YDL_OPTIONS) as ydl:
-            info = ydl.extract_info(song_queue[0], download=False)
+                with YoutubeDL(YDL_OPTIONS) as ydl:
+                    info = ydl.extract_info(song_queue[0], download=False)
 
-        URL = info['formats'][0]['url']
+                URL = info['formats'][0]['url']
 
-        if not voice_client.is_playing():
-            voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source = URL, **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
+                if not voice_client.is_playing():
+                    voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source = URL, **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
 
 
 @bot.command()
 async def pause(ctx):
-    voice = get(bot.voice_clients, guild=ctx.guild)
+    """Pause song"""
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
 
-    voice.pause()
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            global skip_bans
 
-    user = ctx.message.author.mention
-    await ctx.send(f"YeASS sir {user}, song is paused. <:gachiSleeper:998171510990708817>")
+            for ban in skip_bans:
+                if ban == f"{ctx.message.author.id}":
+                    return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+            else:
+                voice = get(bot.voice_clients, guild=ctx.guild)
+
+                if voice:
+                    voice.pause()
+                    user = ctx.message.author.mention
+                    await ctx.send(f"YeASS sir {user}, song is paused. <:gachiSleeper:998171510990708817>")
 
 @bot.command()
 async def resume(ctx):
-    voice = get(bot.voice_clients, guild=ctx.guild)
+    """Resume song"""
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
 
-    voice.resume()
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            global skip_bans
 
-    user = ctx.message.author.mention
-    await ctx.send(f"Oh my master {user}, song resumed! <:gachiVan:998171539746861108>")
+            for ban in skip_bans:
+                if ban == f"{ctx.message.author.id}":
+                    return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+            else:
+                voice = get(bot.voice_clients, guild=ctx.guild)
+
+                if voice:
+                    voice.resume()
+                    user = ctx.message.author.mention
+                    await ctx.send(f"Oh my master {user}, song resumed! <:gachiVan:998171539746861108>")
+
+@bot.command()
+async def skip(ctx):
+    """Skip song"""
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
+
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            global skip_bans
+
+            for ban in skip_bans:
+                if ban == f"{ctx.message.author.id}":
+                    return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+            else:
+                voice = get(bot.voice_clients, guild=ctx.guild)
+
+                if voice:  
+                    voice.pause()
+                    play_next(ctx)
 
 @bot.command()
 async def add_queue(ctx, url):
+    """Add song to queue"""
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
 
-    global song_queue
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            global song_queue
 
-    try:
-        song_queue.append(url)
-        user = ctx.message.author.mention
-        await ctx.send(f'``{url}`` Thank you sir {user}! I added your song to queue. <:gachiVan:998171539746861108>')
-    except:
-        await ctx.send(f"Couldnt add {url} to the queue!")
+            try:
+                song_queue.append(url)
+                user = ctx.message.author.mention
+                await ctx.send(f'``{url}`` Thank you sir {user}! I added your song to queue. <:gachiVan:998171539746861108>')
+            except:
+                await ctx.send(f"Couldnt add {url} to the queue!")
 
 @bot.command()
 async def remove_queue(ctx, number):
+    """Remove song from queue"""
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
 
-    global song_queue
-
-    try:
-        del(song_queue[int(number)])
-        if len(song_queue) < 1:
-            await ctx.send("Your queue is empty now! Now, I'm ready to cum! <:gachiVan:998171539746861108>")
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
         else:
-            await ctx.send(f'Yeah, i did it! Now, swallow my cum <:gachiBASS:998171333127057428>: {song_queue}')
-    except:
-        await ctx.send("<:gachiFU:998171613247848448> Fuck you!!! My laptop says this shit: List index out of range - the queue starts at 0! <:gachiFU:998171613247848448>")
+            global skip_bans
+
+            for ban in skip_bans:
+                if ban == f"{ctx.message.author.id}":
+                    return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+            else:
+                global song_queue
+
+                try:
+                    del(song_queue[int(number)])
+                    if len(song_queue) < 1:
+                        await ctx.send("Your queue is empty now! Now, I'm ready to cum! <:gachiVan:998171539746861108>")
+                    else:
+                        await ctx.send(f'Yeah, i did it! Now, swallow my cum <:gachiBASS:998171333127057428>: {song_queue}')
+                except:
+                    await ctx.send("<:gachiFU:998171613247848448> Fuck you!!! My laptop says this shit: List index out of range - the queue starts at 0! <:gachiFU:998171613247848448>")
 
 @bot.command()
 async def clear_queue(ctx):
+    """Clear queue"""
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
 
-    global song_queue
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            global skip_bans
 
-    song_queue.clear()
-    user = ctx.message.author.mention
-    await ctx.send(f"Ohhh, thanks for free fisting {user} <:gachiBASS:998171333127057428>! Now, my ass is clean.")
+            for ban in skip_bans:
+                if ban == f"{ctx.message.author.id}":
+                    return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+            else:
+                global song_queue
+
+                song_queue.clear()
+                user = ctx.message.author.mention
+                await ctx.send(f"Ohhh, thanks for free fisting {user} <:gachiBASS:998171333127057428>! Now, my ass is clean.")
 
 
 @bot.command()
 async def stop(ctx):
     """Stops and disconnects the bot from voice"""
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
 
-    await ctx.voice_client.disconnect()
-    await ctx.send(f"Bye bye, my master! <:gachiSleeper:998171510990708817>")
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            global skip_bans
+
+            for ban in skip_bans:
+                if ban == f"{ctx.message.author.id}":
+                    return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+            else:
+                await ctx.voice_client.disconnect()
+                await ctx.send(f"Bye bye, my master! <:gachiSleeper:998171510990708817>")
 
 # Youtube ends ###################################################
 
@@ -404,6 +664,18 @@ class Google(commands.Cog):
 async def on_ready():
     print('Logged in as {0} ({0.id})'.format(bot.user))
     print('------')
+
+    f = open("skip_bans.dat", "r")
+    for x in f:
+        skip_bans.append(x.rstrip("\n"))
+
+    f = open("bans.dat", "r")
+    for x in f:
+        bans.append(x.rstrip("\n"))
+
+    f = open("admins.dat", "r")
+    for x in f:
+        admins.append(x.rstrip("\n"))
 
 bot.add_cog(Google(bot))
 
