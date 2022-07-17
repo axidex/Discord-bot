@@ -74,15 +74,11 @@ FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconne
 
 @bot.command()
 async def play(ctx, arg):
-    voice_channel = ctx.message.author.voice.channel
-    vc = await voice_channel.connect()
-
-    #try:
-        
-        
-    #    print(voice_channel)
-    #except:
-    #    print('Уже подключен или не удалось подключиться')
+    try:
+        voice_channel = ctx.message.author.voice.channel
+        vc = await voice_channel.connect()
+    except:
+        print('Уже подключен или не удалось подключиться')
 
     if vc.is_playing():
         await ctx.send(f'{ctx.message.author.mention}, музыка уже проигрывается.')
