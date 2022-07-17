@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.utils import get
 from config import settings
 
 import random
@@ -10,7 +11,11 @@ import aiohttp # google
 import json # random images from internet
 import requests 
 
+
 bot = commands.Bot(command_prefix = settings['prefix']) 
+
+song_queue = []
+
 
 @bot.command() 
 async def hello(ctx): 
@@ -72,29 +77,107 @@ YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'False'}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
 
-@bot.command()
-async def play(ctx, arg):
-    try:
-        voice_channel = ctx.message.author.voice.channel
-        vc = await voice_channel.connect()
-    except:
-        print('Уже подключен или не удалось подключиться')
+def play_next(ctx):
+    if len(song_queue) >= 1:
+        del song_queue[0]
 
-    if vc.is_playing():
-        await ctx.send(f'{ctx.message.author.mention}, музыка уже проигрывается.')
-
-    else:
         with YoutubeDL(YDL_OPTIONS) as ydl:
-            info = ydl.extract_info(arg, download=False)
+            info = ydl.extract_info(song_queue[0], download=False)
 
         URL = info['formats'][0]['url']
 
-        vc.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source = URL, **FFMPEG_OPTIONS))
-                
-        while vc.is_playing():
-            await sleep(1)
-        if not vc.is_paused():
-            await vc.disconnect()
+        voice_client = get(bot.voice_clients, guild=ctx.guild)
+        voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source=URL, **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
+    else:
+        if not voice_client.is_playing():
+            voice_client.disconnect(ctx)
+
+
+@bot.command()
+async def play(ctx, arg = None):
+
+    global song_queue
+    
+    if arg is None and not song_queue:
+        return await ctx.send(f"Hey {ctx.message.author.mention}, you must include something to play or i will cum inside your ass!")
+    else:
+        song_queue.append(arg)
+
+    voice_client = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+
+    if voice_client is None:
+        try:
+            voice_channel = ctx.message.author.voice.channel
+            voice_client = await voice_channel.connect()
+        except:
+            print('Уже подключен или не удалось подключиться')
+
+
+        with YoutubeDL(YDL_OPTIONS) as ydl:
+            info = ydl.extract_info(song_queue[0], download=False)
+
+        URL = info['formats'][0]['url']
+
+        if not voice_client.is_playing():
+            voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source = URL, **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
+            await ctx.send("Fuck you, now playing...")
+        else:
+            await ctx.send('Fuck you, song is queued!')
+
+
+@bot.command()
+async def pause(ctx):
+    voice = get(bot.voice_clients, guild=ctx.guild)
+
+    voice.pause()
+
+    user = ctx.message.author.mention
+    await ctx.send(f"Bot was paused by {user}")
+
+@bot.command()
+async def resume(ctx):
+    voice = get(bot.voice_clients, guild=ctx.guild)
+
+    voice.resume()
+
+    user = ctx.message.author.mention
+    await ctx.send(f"Bot was resumed by {user}")
+
+@bot.command()
+async def add_queue(ctx, url):
+
+    global song_queue
+
+    try:
+        song_queue.append(url)
+        user = ctx.message.author.mention
+        await ctx.send(f'``{url}`` was added to the queue by {user}!')
+    except:
+        await ctx.send(f"Couldnt add {url} to the queue!")
+
+@bot.command()
+async def remove_queue(ctx, number):
+
+    global song_queue
+
+    try:
+        del(song_queue[int(number)])
+        if len(song_queue) < 1:
+            await ctx.send("Your queue is empty now!")
+        else:
+            await ctx.send(f'Your queue is now {song_queue}')
+    except:
+        await ctx.send("List index out of range - the queue starts at 0")
+
+@bot.command()
+async def clear_queue(ctx):
+
+    global song_queue
+
+    song_queue.clear()
+    user = ctx.message.author.mention
+    await ctx.send(f"The queue was cleared by {user}")
+
 
 
 @bot.command()
