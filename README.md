@@ -26,6 +26,7 @@ settings = {
     'bot': 'Имя бота',
     'id': Client ID бота, без кавычек,
     'prefix': 'Префикс бота',
-    'ffmpeg_path': 'ffmpeg'
+    'ffmpeg_path': 'ffmpeg',
+    'bot_channel_name' : 'gay-bots'
 }
 ```
