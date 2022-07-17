@@ -16,10 +16,10 @@ pip install youtube_dl
 ```
 # config.py
 <code>
-<code> settings = { </code>
-    'token': 'Ваш токен',
-    'bot': 'Имя бота',
-    'id': Client ID бота, без кавычек,
-    'prefix': 'Префикс бота'
+settings = {<br>
+    'token': 'Ваш токен',<br>
+    'bot': 'Имя бота',<br>
+    'id': Client ID бота, без кавычек,<br>
+    'prefix': 'Префикс бота'<br>
 }
 </code>
