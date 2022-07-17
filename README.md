@@ -14,6 +14,10 @@ pip install requests
 ```no-highlight
 pip install youtube_dl
 ```
+
+```no-highlight
+pip install PyNaCl
+```
 # Config.py
 
 ```Python
