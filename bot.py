@@ -78,9 +78,9 @@ FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconne
 
 
 def play_next(ctx):
-    if len(song_queue) >= 1:
-        del song_queue[0]
+    del song_queue[0]
 
+    if len(song_queue) > 0: 
         with YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(song_queue[0], download=False)
 
@@ -102,6 +102,7 @@ async def play(ctx, arg = None):
         return await ctx.send(f"Hey {ctx.message.author.mention}, you must include something to play or i will cum inside your ass!")
     else:
         song_queue.append(arg)
+        await ctx.send(f"``{arg}`` Thank you sir {ctx.message.author.mention}! I added your song to queue. <:gachiVan:998171539746861108>")
 
     voice_client = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
@@ -120,9 +121,6 @@ async def play(ctx, arg = None):
 
         if not voice_client.is_playing():
             voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source = URL, **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
-            await ctx.send("Fuck you, now playing...")
-        else:
-            await ctx.send('Fuck you, song is queued!')
 
 
 @bot.command()
@@ -132,7 +130,7 @@ async def pause(ctx):
     voice.pause()
 
     user = ctx.message.author.mention
-    await ctx.send(f"Bot was paused by {user}")
+    await ctx.send(f"YeASS sir {user}, song is paused. <:gachiSleeper:998171510990708817>")
 
 @bot.command()
 async def resume(ctx):
@@ -141,7 +139,7 @@ async def resume(ctx):
     voice.resume()
 
     user = ctx.message.author.mention
-    await ctx.send(f"Bot was resumed by {user}")
+    await ctx.send(f"Oh my master {user}, song resumed! <:gachiVan:998171539746861108>")
 
 @bot.command()
 async def add_queue(ctx, url):
@@ -151,7 +149,7 @@ async def add_queue(ctx, url):
     try:
         song_queue.append(url)
         user = ctx.message.author.mention
-        await ctx.send(f'``{url}`` was added to the queue by {user}!')
+        await ctx.send(f'``{url}`` Thank you sir {user}! I added your song to queue. <:gachiVan:998171539746861108>')
     except:
         await ctx.send(f"Couldnt add {url} to the queue!")
 
@@ -163,11 +161,11 @@ async def remove_queue(ctx, number):
     try:
         del(song_queue[int(number)])
         if len(song_queue) < 1:
-            await ctx.send("Your queue is empty now!")
+            await ctx.send("Your queue is empty now! Now, I'm ready to cum! <:gachiVan:998171539746861108>")
         else:
-            await ctx.send(f'Your queue is now {song_queue}')
+            await ctx.send(f'Yeah, i did it! Now, swallow my cum <:gachiBASS:998171333127057428>: {song_queue}')
     except:
-        await ctx.send("List index out of range - the queue starts at 0")
+        await ctx.send("<:gachiFU:998171613247848448> Fuck you!!! My laptop says this shit: List index out of range - the queue starts at 0! <:gachiFU:998171613247848448>")
 
 @bot.command()
 async def clear_queue(ctx):
@@ -176,8 +174,7 @@ async def clear_queue(ctx):
 
     song_queue.clear()
     user = ctx.message.author.mention
-    await ctx.send(f"The queue was cleared by {user}")
-
+    await ctx.send(f"Ohhh, thanks for free fisting {user} <:gachiBASS:998171333127057428>! Now, my ass is clean.")
 
 
 @bot.command()
@@ -185,6 +182,7 @@ async def stop(ctx):
     """Stops and disconnects the bot from voice"""
 
     await ctx.voice_client.disconnect()
+    await ctx.send(f"Bye bye, my master! <:gachiSleeper:998171510990708817>")
 
 # Youtube ends ###################################################
 
