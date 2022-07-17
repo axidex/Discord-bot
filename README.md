@@ -2,7 +2,7 @@ To use this bot you need first to download this executable ffmpeg.org/download.h
 
 # Discord-bot
 
-# Req
+# Requirements
 ```no-highlight
 pip install discord
 ```
@@ -14,7 +14,7 @@ pip install requests
 ```no-highlight
 pip install youtube_dl
 ```
-# config.py
+# Config.py
 
 ```Python
 settings = {
