@@ -16,7 +16,7 @@ pip install youtube_dl
 ```
 # config.py
 <code>
-settings = {
+<code> settings = { </code>
     'token': 'Ваш токен',
     'bot': 'Имя бота',
     'id': Client ID бота, без кавычек,
