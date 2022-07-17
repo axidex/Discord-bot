@@ -325,4 +325,8 @@ async def on_ready():
     print('------')
 
 bot.add_cog(Google(bot))
-bot.run(settings['token'])
+
+try:
+    bot.run(settings['token'])
+except discord.errors.HTTPException and discord.errors.LoginFailure as e:
+    print("Login unsuccessful.")
