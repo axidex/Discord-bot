@@ -5,18 +5,10 @@ To use this bot you need first to download this executable ffmpeg.org/download.h
 # Requirements
 ```no-highlight
 pip install discord
-```
-
-```no-highlight
 pip install requests 
-```
-
-```no-highlight
 pip install youtube_dl
-```
-
-```no-highlight
 pip install PyNaCl
+pip install config
 ```
 # Config.py
 
