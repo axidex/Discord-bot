@@ -25,6 +25,7 @@ settings = {
     'token': 'Ваш токен',
     'bot': 'Имя бота',
     'id': Client ID бота, без кавычек,
-    'prefix': 'Префикс бота'
+    'prefix': 'Префикс бота',
+    'ffmpeg_path': 'ffmpeg'
 }
 ```
