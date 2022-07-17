@@ -15,11 +15,12 @@ pip install requests
 pip install youtube_dl
 ```
 # config.py
-<code>
+
+```Python
 settings = {<br>
     'token': 'Ваш токен',<br>
     'bot': 'Имя бота',<br>
     'id': Client ID бота, без кавычек,<br>
     'prefix': 'Префикс бота'<br>
 }
-</code>
+```
