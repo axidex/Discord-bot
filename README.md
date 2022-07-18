@@ -23,7 +23,7 @@ settings = {
 }
 ```
 # functions
-
+```
 | Name of the function | Discription | Input |
 | Ban | Banning some suspicious user | Name |
 | Unban | Unbanning some suspicious user | Name |
@@ -46,3 +46,4 @@ settings = {
 | removeQueue | Removing video from the queue | Number in the queue | 
 | clearQueue | Clearing queue | - |
 | stop | disconnecting the bot from channel | - | 
+```
