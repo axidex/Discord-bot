@@ -27,6 +27,7 @@ settings = {
 | Name of the function | Discription | Input |
 |:---------:|:---------:|:---------:|
 | Ban | Banning some suspicious user | Name |
+| banSkip | Banning ability to skip for suspicious user  | Name |
 | Unban | Unbanning some suspicious user | Name |
 | Hello | Literally Hello | - | 
 | F*ckU | Naughty bot... | - |
@@ -39,7 +40,6 @@ settings = {
 | repeat | Repeating your input X times | integer X and your input after | 
 |  | Youtube |  |
 | play | Playing the youtube video in voice chat | Youtube link |
-| playNext | Playing next video in the queue | - |
 | pause | Pausing the audio | - |
 | resume | Resuming the audio | - |
 | skip | Skipping to the next video in the queue | - |

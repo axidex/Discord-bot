@@ -17,11 +17,11 @@ bot = commands.Bot(command_prefix = settings['prefix'])
 
 song_queue = []
 admins = []
-skip_bans = []
+skipBans = []
 bans = []
 
 @bot.command() 
-async def ban_skip(ctx, user):
+async def banSkip(ctx, user):
     if ctx.channel.name == settings['bot_channel_name']:
         global admins
 
@@ -33,8 +33,8 @@ async def ban_skip(ctx, user):
 
         userId = re.findall(r'[0-9]+', f"{user}")
 
-        skip_bans.append(userId[0])
-        with open('skip_bans.dat', 'a') as f:
+        skipBans.append(userId[0])
+        with open('skipBans.dat', 'a') as f:
             f.write(f"{userId[0]}\n")
 
         await ctx.send(f'Ohh my master {ctx.message.author.mention}, this dirty {user} was added to my slaves note.') 
@@ -62,10 +62,10 @@ async def ban(ctx, user):
 
 @bot.command() 
 async def unban(ctx, ban_mode, user):
-    """Unban user. Example: slave, unban skip_ban @axidex"""
+    """Unban user. Example: slave, unban skipBan @axidex"""
     if ctx.channel.name == settings['bot_channel_name']:
         global admins
-        global skip_bans
+        global skipBans
         global bans
 
         for admin in admins:
@@ -78,8 +78,8 @@ async def unban(ctx, ban_mode, user):
 
         if ban_mode == "ban":
             ban_list = bans
-        elif ban_mode == "skip_ban":
-            ban_list = skip_bans
+        elif ban_mode == "skipBan":
+            ban_list = skipBans
         else:
             return await ctx.send(f'I dont undestand. It\'s to HAAARD!!!') 
 
@@ -118,8 +118,8 @@ async def hello(ctx):
             await ctx.send(f'Hello, {author.mention}!') 
             
             # add admin to admins.dat
-            #with open('admin_id.txt', 'a') as f:
-            #    f.write(f"{ctx.author.id}")
+            with open('admin_id.txt', 'a') as f:
+                f.write(f"{ctx.author.id}")
 
 @bot.command()
 async def fucku(ctx): 
@@ -298,9 +298,9 @@ async def pause(ctx):
             if ban == f"{ctx.message.author.id}":
                 return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
         else:
-            global skip_bans
+            global skipBans
 
-            for ban in skip_bans:
+            for ban in skipBans:
                 if ban == f"{ctx.message.author.id}":
                     return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
             else:
@@ -321,9 +321,9 @@ async def resume(ctx):
             if ban == f"{ctx.message.author.id}":
                 return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
         else:
-            global skip_bans
+            global skipBans
 
-            for ban in skip_bans:
+            for ban in skipBans:
                 if ban == f"{ctx.message.author.id}":
                     return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
             else:
@@ -344,9 +344,9 @@ async def skip(ctx):
             if ban == f"{ctx.message.author.id}":
                 return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
         else:
-            global skip_bans
+            global skipBans
 
-            for ban in skip_bans:
+            for ban in skipBans:
                 if ban == f"{ctx.message.author.id}":
                     return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
             else:
@@ -385,9 +385,9 @@ async def removeQueue(ctx, number):
             if ban == f"{ctx.message.author.id}":
                 return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
         else:
-            global skip_bans
+            global skipBans
 
-            for ban in skip_bans:
+            for ban in skipBans:
                 if ban == f"{ctx.message.author.id}":
                     return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
             else:
@@ -412,9 +412,9 @@ async def clearQueue(ctx):
             if ban == f"{ctx.message.author.id}":
                 return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
         else:
-            global skip_bans
+            global skipBans
 
-            for ban in skip_bans:
+            for ban in skipBans:
                 if ban == f"{ctx.message.author.id}":
                     return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
             else:
@@ -435,9 +435,9 @@ async def stop(ctx):
             if ban == f"{ctx.message.author.id}":
                 return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
         else:
-            global skip_bans
+            global skipBans
 
-            for ban in skip_bans:
+            for ban in skipBans:
                 if ban == f"{ctx.message.author.id}":
                     return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
             else:
@@ -454,8 +454,8 @@ async def queue(ctx):
             if ban == f"{ctx.message.author.id}":
                 return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
         else:
-            for song in song_queue
-                ctx.send(f'{song}')
+            for song in song_queue:
+                await ctx.send(f'{song}')
             return await ctx.send(f"that's all")
             
 # Youtube ends ###################################################
@@ -679,9 +679,9 @@ async def on_ready():
     print('Logged in as {0} ({0.id})'.format(bot.user))
     print('------')
 
-    f = open("skip_bans.dat", "r")
+    f = open("skipBans.dat", "r")
     for x in f:
-        skip_bans.append(x.rstrip("\n"))
+        skipBans.append(x.rstrip("\n"))
 
     f = open("bans.dat", "r")
     for x in f:
