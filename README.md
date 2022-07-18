@@ -25,7 +25,7 @@ settings = {
 # functions
 
 | Name of the function | Discription | Input |
-|----------------|:---------:|----------------:|
+|:---------:|:---------:|:---------:|
 | Ban | Banning some suspicious user | Name |
 | Unban | Unbanning some suspicious user | Name |
 | Hello | Literally Hello | - | 
