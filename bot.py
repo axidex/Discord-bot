@@ -444,6 +444,18 @@ async def stop(ctx):
                 await ctx.voice_client.disconnect()
                 await ctx.send(f"Bye bye, my master! <:gachiSleeper:998171510990708817>")
 
+@bot.command()
+async def queue(ctx):
+    """ outputs the queue """
+    if ctx.channel.name == settings['bot_channel_name']:
+        global bans
+
+        for ban in bans:
+            if ban == f"{ctx.message.author.id}":
+                return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
+        else:
+            return await ctx.send(f'{queue}')
+            
 # Youtube ends ###################################################
 
 class Google(commands.Cog):
