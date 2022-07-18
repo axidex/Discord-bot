@@ -37,7 +37,7 @@ settings = {
 | roll2 | Rolling number in interval between 2 input numbers | First and second number | 
 | choose | Choose between choices | List of input words to choose |
 | repeat | Repeating your input X times | integer X and your input after | 
-|  | Youtube |  |
+|:Youtube:|
 | play | Playing the youtube video in voice chat | Youtube link |
 | playNext | Playing next video in the queue | - |
 | pause | Pausing the audio | - |
