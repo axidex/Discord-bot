@@ -47,3 +47,4 @@ settings = {
 | removeQueue | Removing video from the queue | Number in the queue | 
 | clearQueue | Clearing queue | - |
 | stop | Disconnecting the bot from channel | - | 
+| queue | Showing queue | - | 
