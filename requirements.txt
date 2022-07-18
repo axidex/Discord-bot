@@ -1,4 +1,6 @@
 youtube_dl
+discord
+requests
 PyNaCl
 config
 ffmpeg
