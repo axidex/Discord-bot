@@ -234,7 +234,7 @@ YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'False'}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
 
-def play_next(ctx):
+def playNext(ctx):
     del song_queue[0]
     voice_client = get(bot.voice_clients, guild=ctx.guild)
 
@@ -244,7 +244,7 @@ def play_next(ctx):
 
         URL = info['formats'][0]['url']
 
-        voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source=URL, **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
+        voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source=URL, **FFMPEG_OPTIONS), after=lambda e: playNext(ctx))
     else:
         if not voice_client.is_playing():
             voice_client.disconnect(ctx)
@@ -285,7 +285,7 @@ async def play(ctx, arg = None):
                 URL = info['formats'][0]['url']
 
                 if not voice_client.is_playing():
-                    voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source = URL, **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
+                    voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source = URL, **FFMPEG_OPTIONS), after=lambda e: playNext(ctx))
 
 
 @bot.command()
@@ -354,10 +354,10 @@ async def skip(ctx):
 
                 if voice:  
                     voice.pause()
-                    play_next(ctx)
+                    playNext(ctx)
 
 @bot.command()
-async def add_queue(ctx, url):
+async def addQueue(ctx, url):
     """Add song to queue"""
     if ctx.channel.name == settings['bot_channel_name']:
         global bans
@@ -376,7 +376,7 @@ async def add_queue(ctx, url):
                 await ctx.send(f"Couldnt add {url} to the queue!")
 
 @bot.command()
-async def remove_queue(ctx, number):
+async def removeQueue(ctx, number):
     """Remove song from queue"""
     if ctx.channel.name == settings['bot_channel_name']:
         global bans
@@ -403,7 +403,7 @@ async def remove_queue(ctx, number):
                     await ctx.send("<:gachiFU:998171613247848448> Fuck you!!! My laptop says this shit: List index out of range - the queue starts at 0! <:gachiFU:998171613247848448>")
 
 @bot.command()
-async def clear_queue(ctx):
+async def clearQueue(ctx):
     """Clear queue"""
     if ctx.channel.name == settings['bot_channel_name']:
         global bans
