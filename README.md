@@ -48,6 +48,5 @@ settings = {
 | stop | disconnecting the bot from channel | - | 
 
 | LEFT | CENTER | RIGHT |
-|----------------|:---------:|----------------:|
 | По левому краю | По центру | По правому краю |
 | текст | текст | текст |
