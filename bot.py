@@ -454,7 +454,7 @@ async def queue(ctx):
             if ban == f"{ctx.message.author.id}":
                 return await ctx.send(f'Fuck you, {ctx.message.author.mention}! <:gachiFU:998171613247848448>')
         else:
-            return await ctx.send(f'{queue}')
+            return await ctx.send(f'{song_queue}')
             
 # Youtube ends ###################################################
 
