@@ -13,7 +13,9 @@ import aiohttp # google
 import json # random images from internet
 import requests 
 
-bot = commands.Bot(command_prefix = settings['prefix']) 
+intents = discord.Intents.all()
+
+bot = commands.Bot(command_prefix = settings['prefix'], intents = intents) 
 
 song_queue = []
 admins = []
