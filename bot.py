@@ -13,9 +13,14 @@ import aiohttp # google
 import json # random images from internet
 import requests 
 
+bot_channel_name = settings['bot_channel_name']
+prefix = settings['prefix']
+ffmpeg_path = settings['ffmpeg_path']
+token = settings['token']
+
 intents = discord.Intents.all()
 
-bot = commands.Bot(command_prefix = settings['prefix'], intents = intents) 
+bot = commands.Bot(command_prefix = prefix, intents = intents) 
 
 song_queue = []
 admins = []
@@ -24,7 +29,7 @@ bans = []
 
 @bot.command() 
 async def banSkip(ctx, user):
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global admins
 
         for admin in admins:
@@ -44,7 +49,7 @@ async def banSkip(ctx, user):
 
 @bot.command() 
 async def ban(ctx, user):
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global admins
 
         for admin in admins:
@@ -65,7 +70,7 @@ async def ban(ctx, user):
 @bot.command() 
 async def unban(ctx, ban_mode, user):
     """Unban user. Example: slave, unban skipBan @axidex"""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global admins
         global skipBans
         global bans
@@ -108,7 +113,7 @@ async def unban(ctx, ban_mode, user):
 
 @bot.command() 
 async def hello(ctx):
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -125,7 +130,7 @@ async def hello(ctx):
 
 @bot.command()
 async def fucku(ctx): 
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -139,7 +144,7 @@ async def fucku(ctx):
 
 @bot.command()
 async def joke(ctx):
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -156,7 +161,7 @@ async def joke(ctx):
 @bot.command()
 async def add(ctx, left: int, right: int):
     """Adds two numbers together."""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -168,7 +173,7 @@ async def add(ctx, left: int, right: int):
 
 @bot.command()
 async def roll(ctx, left: int):
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -179,7 +184,7 @@ async def roll(ctx, left: int):
 
 @bot.command()
 async def roll100(ctx):
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -190,7 +195,7 @@ async def roll100(ctx):
 
 @bot.command()
 async def roll2(ctx, left: int, right: int):
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -202,7 +207,7 @@ async def roll2(ctx, left: int, right: int):
 @bot.command(description='For when you wanna settle the score some other way')
 async def choose(ctx, *choices: str):
     """Chooses between multiple choices."""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -214,7 +219,7 @@ async def choose(ctx, *choices: str):
 @bot.command()
 async def repeat(ctx, times: int, content='repeating...'):
     """Repeats a message multiple times."""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -246,7 +251,7 @@ def playNext(ctx):
 
         URL = info['formats'][0]['url']
 
-        voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source=URL, **FFMPEG_OPTIONS), after=lambda e: playNext(ctx))
+        voice_client.play(discord.FFmpegPCMAudio(executable=ffmpeg_path, source=URL, **FFMPEG_OPTIONS), after=lambda e: playNext(ctx))
     else:
         if not voice_client.is_playing():
             voice_client.disconnect(ctx)
@@ -256,7 +261,7 @@ def playNext(ctx):
 async def play(ctx, arg = None):
     """Play song"""
 
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -287,13 +292,13 @@ async def play(ctx, arg = None):
                 URL = info['formats'][0]['url']
 
                 if not voice_client.is_playing():
-                    voice_client.play(discord.FFmpegPCMAudio(executable=settings['ffmpeg_path'], source = URL, **FFMPEG_OPTIONS), after=lambda e: playNext(ctx))
+                    voice_client.play(discord.FFmpegPCMAudio(executable=ffmpeg_path, source = URL, **FFMPEG_OPTIONS), after=lambda e: playNext(ctx))
 
 
 @bot.command()
 async def pause(ctx):
     """Pause song"""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -316,7 +321,7 @@ async def pause(ctx):
 @bot.command()
 async def resume(ctx):
     """Resume song"""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -339,7 +344,7 @@ async def resume(ctx):
 @bot.command()
 async def skip(ctx):
     """Skip song"""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -361,7 +366,7 @@ async def skip(ctx):
 @bot.command()
 async def addQueue(ctx, url):
     """Add song to queue"""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -380,7 +385,7 @@ async def addQueue(ctx, url):
 @bot.command()
 async def removeQueue(ctx, number):
     """Remove song from queue"""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -407,7 +412,7 @@ async def removeQueue(ctx, number):
 @bot.command()
 async def clearQueue(ctx):
     """Clear queue"""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -430,7 +435,7 @@ async def clearQueue(ctx):
 @bot.command()
 async def stop(ctx):
     """Stops and disconnects the bot from voice"""
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -449,7 +454,7 @@ async def stop(ctx):
 @bot.command()
 async def queue(ctx):
     """ outputs the queue """
-    if ctx.channel.name == settings['bot_channel_name']:
+    if ctx.channel.name == bot_channel_name:
         global bans
 
         for ban in bans:
@@ -696,6 +701,6 @@ async def on_ready():
 bot.add_cog(Google(bot))
 
 try:
-    bot.run(settings['token'])
+    bot.run(token)
 except discord.errors.HTTPException and discord.errors.LoginFailure as e:
     print("Login unsuccessful.")
