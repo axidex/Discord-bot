@@ -234,7 +234,8 @@ async def repeat(ctx, times: int, content='repeating...'):
 
 # Youtube #####################################################
 
-from youtube_dl import YoutubeDL
+#from youtube_dl import YoutubeDL
+import yt_dlp
 from asyncio import sleep
 
 YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'False'}
@@ -246,7 +247,9 @@ def playNext(ctx):
     voice_client = get(bot.voice_clients, guild=ctx.guild)
 
     if len(song_queue) > 0: 
-        with YoutubeDL(YDL_OPTIONS) as ydl:
+        #with YoutubeDL(YDL_OPTIONS) as ydl:
+            #info = ydl.extract_info(song_queue[0], download=False)
+        with yt_dlp.YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(song_queue[0], download=False)
 
         URL = info['formats'][0]['url']
@@ -254,8 +257,7 @@ def playNext(ctx):
         voice_client.play(discord.FFmpegPCMAudio(executable=ffmpeg_path, source=URL, **FFMPEG_OPTIONS), after=lambda e: playNext(ctx))
     else:
         if not voice_client.is_playing():
-            voice_client.disconnect(ctx)
-
+            voice_client.disconnect()
 
 @bot.command()
 async def play(ctx, arg = None):
@@ -286,13 +288,15 @@ async def play(ctx, arg = None):
                     print('Уже подключен или не удалось подключиться')
 
 
-                with YoutubeDL(YDL_OPTIONS) as ydl:
-                    info = ydl.extract_info(song_queue[0], download=False)
+                #with YoutubeDL(YDL_OPTIONS) as ydl:
+                  #info = ydl.extract_info(song_queue[0], download=False)
+                with yt_dlp.YoutubeDL(YDL_OPTIONS) as ydl:
+                  info = ydl.extract_info(song_queue[0], download=False)
 
                 URL = info['formats'][0]['url']
 
                 if not voice_client.is_playing():
-                    voice_client.play(discord.FFmpegPCMAudio(executable=ffmpeg_path, source = URL, **FFMPEG_OPTIONS), after=lambda e: playNext(ctx))
+                    voice_client.play(discord.FFmpegPCMAudio(executable=ffmpeg_path, source = URL, **FFMPEG_OPTIONS))
 
 
 @bot.command()
